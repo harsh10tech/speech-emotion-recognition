@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %} Record Home Page {% endblock %}
+
+{% block content %}
+<section class="home">
+    <h1 class=" h1-primary">Speech Emotion Classification!!</h1>
+    <p>
+        <button id="startRecording" class = "btn">Start recording</button>
+        <box id = "counter">0</box>
+        <button id="stopRecording" disabled class = "btn">Stop recording</button>
+        <P>
+            <a href = predict>
+            <button id="predict" disabled class ="btn">Predict!</button>
+            </a>
+        </P>
+    </p>
+    <p>
+    </p>
+</section>
+
+{% endblock %}
+
+{% block script %}
+<script>
+
+    var recordingTime;
+    var recordingInterval; 
+    var recording = false;
+
+    navigator
+        .mediaDevices
+        .getUserMedia({audio: true})
+        .then(stream => { handlerFunction(stream) });
+
+    function handlerFunction(stream) {
+        rec = new MediaRecorder(stream);
+        rec.ondataavailable = e => {
+            audioChunks.push(e.data);
+            if (rec.state == "inactive") {
+                let blob = new Blob(audioChunks, {type: 'audio/wav'});
+                sendData(blob);
+            }
+        }
+    }
+
+    function sendData(data) {
+        var form = new FormData();
+        form.append('file', data, 'data.wav');
+        form.append('title', 'data.wav');
+        //Chrome inspector shows that the post data includes a file and a title.
+        $.ajax({
+            type: 'POST',
+            url: '/save-record',
+            data: form,
+            cache: false,
+            processData: false,
+            contentType: false
+        }).done(function(data) {
+            console.log(data);
+        });
+    }
+
+
+    startRecording.onclick = function() {
+        console.log('Recording started..');
+        recording = true;
+        startRecording.disabled = true;
+        stopRecording.disabled = false;
+        predict.disabled = true;
+        audioChunks = [];
+        rec.start();
+        recordingTime = 0;
+        recordingInterval = setInterval(function() {
+            recordingTime += 1;
+            counterElement.innerHTML = recordingTime;
+            if (recordingTime >= 11) {
+                recordingStop();
+            }
+        }, 1000);
+    };
+
+    var counterElement = document.getElementById("counter");
+
+    stopRecording.onclick = function() {
+        if(recording){
+            recordingStop();
+        }
+    };
+    function recordingStop(){
+        recording = false;
+        clearInterval(recordingInterval);
+        counterElement.innerHTML= 0;
+        console.log("Recording stopped.");
+        startRecording.disabled = false;
+        stopRecording.disabled = true;
+        predict.disabled = false;
+        rec.stop();
+        // rec = null;
+    }
+</script>
+{% endblock %}

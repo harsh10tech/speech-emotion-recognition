@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %} Predicted Results {% endblock %}
+
+{% block content %}
+<a href = />
+    <button class ="btn">Home</button>
+</a>
+<section class = "home">
+
+    <h1 class=" h1-primary">Speech Emotion Classification!!</h1>
+    <p>
+        <h2 class = "h2-primary">Play the recorded Speech</h2>
+        <audio controls>
+            <source src="static\files\recordedAudio.wav" type="audio/WAV">
+        </audio>
+        <p class = "h2-primary">The speaker is <b>{{content}}</b></p>
+    </p>
+</section>
+{% endblock %}

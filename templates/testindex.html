@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sound Recorder</title>
+</head>
+<body>
+    <h1>Sound Recorder</h1>
+
+    <p>Press the record button below to start recording. Recording will automatically stop after 10 seconds.</p>
+
+    <p>Press the record button below to start recording. Recording will automatically stop after 10 seconds.</p>
+
+<button id="record_button">Record</button>
+<button id="stop_button" disabled>Stop</button>
+<p id="status"></p>
+
+<script>
+    var recording = false;
+    var recording_timeout;
+    var audio_data;
+    var mediaRecorder;
+
+    var record_button = document.getElementById("record_button");
+    var stop_button = document.getElementById("stop_button");
+    var status = document.getElementById("status");
+
+    record_button.onclick = function() {
+        recording = true;
+        record_button.disabled = true;
+        stop_button.disabled = false;
+        status.innerHTML = "Recording...";
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(function(stream) {
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.start();
+                audio_data = [];
+
+                mediaRecorder.addEventListener("dataavailable", function(event) {
+                    audio_data.push(event.data);
+                });
+                recording_timeout = setTimeout(function() {
+                        stopRecording();
+                    }, 10000);
+                });
+        };
+
+        stop_button.onclick = function() {
+            if (recording) {
+                stopRecording();
+            }
+        };
+
+        function stopRecording() {
+            recording = false;
+            clearTimeout(recording_timeout);
+            mediaRecorder.stop();
+            status.innerHTML = "Recording stopped.";
+            record_button.disabled = false;
+            stop_button.disabled = true;
+
+            var blob = new Blob(audio_data, { type: "audio/wav" });
+            var form_data = new FormData();
+            form_data.append("audio_file", blob, "recording.wav");
+
+            fetch("/process_audio", {
+                method: "POST",
+                body: form_data
+            }).then(function(response) {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error("Failed to process audio.");
+                }
+            }).then(function(data) {
+                // Display the results of the model inference.
+                console.log(data);
+            }).catch(function(error) {
+                console.error(error);
+            });
+        }
+    </script>
+</body>
+</html>

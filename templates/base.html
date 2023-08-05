@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="icon" href="data:,">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <style>
+        html {
+        scroll-behavior: smooth;
+      }
+        #home h1 {
+        color: white;
+        font-size: 2.6rem;
+        text-align: center;
+        font-family: "Bree Serif", serif;
+      }
+      #home p {
+        color: white;
+        text-align: center;
+        font-size: 1.5rem;
+        font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+          "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+      }
+        .btn {
+        /* position: relative; */
+        padding: 6px 20px;
+        border: 2px solid rgb(240, 236, 236);
+        /* background-color: rgb(82, 203, 120); */
+        color: rgb(3, 0, 0);
+        margin: 17px;
+        font-size: 1.2rem;
+        border-radius: 17px;
+        align-items:bottom;
+        cursor: pointer;
+      }
+      body {
+        background-color: rgb(149, 236, 115);
+      }
+      .home {
+        display: flex;
+        flex-direction: column;
+        padding: 3px 200px;
+        justify-content: center;
+        align-items: center;
+        height: 550px;
+      }
+      .home:before {
+        top: 0px;
+        left: 0px;
+        content: "";
+        background: url("{{url_for('static',filename='images/emotions4.0.jpg')}}") no-repeat center
+          center/cover;
+        position: absolute;
+        height: 642px;
+        /* height: 100%; */
+        width: 100%;
+        z-index: -1;
+        opacity: 0.9;
+        /* position: relative; */
+      }
+      .home:h1 {
+        color: rgb(131, 215, 231);
+        font-size: 2.6rem;
+        text-align: center;
+        font-family: "Bree Serif", serif;
+      }
+      .home:p {
+        color: white;
+        text-align: center;
+        font-size: 1.5rem;
+        font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+          "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+      }
+      .h1-primary {
+        font-family: "Bree Serif", serif;
+        border-color: black;
+        text-shadow: 3px 2px 4px black;
+        color: white;
+        font-size: 3rem;
+        padding: 12px;
+      }
+      .h2-primary {
+        font-family: "Bree Serif", serif;
+        border-color: black;
+        text-shadow: 1px 2px 4px black;
+        color: white;
+        font-size: 2rem;
+        padding: 12px;
+      }
+      box{
+        color:white; 
+        font-size:1.2rem; 
+        margin: 17px;
+        border-radius:100%;
+        border: 3px solid white;
+        padding: 4px 6px ;
+      }
+    </style>
+    
+</head>
+<body >
+    {% block content %}
+    {% endblock %}
+    
+</body>
+    {% block script %}
+    {% endblock %}
+</html>
