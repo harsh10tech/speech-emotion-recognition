@@ -6,4 +6,4 @@ python app.py
 
 ## Working of the Model
 
-![Alt text](image.png)
+![Project Workflow](image.png)
